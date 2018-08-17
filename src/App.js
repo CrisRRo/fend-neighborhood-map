@@ -11,10 +11,14 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Bucharest Old Town Map</h1>
         </header>
-        <div className="App-intro">
-          This should be left side bar
-		  <MapContainer />
-        </div>
+        <main className="App-intro">
+			<section id='left-side-bar'>
+				This should be left side bar
+			</section>
+			<section id='map-container'>
+				<MapContainer />
+			</section>
+        </main>
       </div>
     );
   }
