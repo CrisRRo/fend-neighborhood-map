@@ -3,11 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import MapContainer from './MapContainer.js';
 
-class App extends Component {
-  constructor(props) {
-    super(props)
-  }
-  
+class App extends Component { 
   render() {
     return (
       <div className="App">
