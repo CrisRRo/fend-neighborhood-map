@@ -2,16 +2,10 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import MapContainer from './MapContainer.js';
-import * as AppData from './AppData';
-import { markerLocations } from "./AppData.js"
 
 class App extends Component {
   constructor(props) {
     super(props)
-  }
-  
-  state = {
-	  markersLocations: markerLocations
   }
   
   render() {
@@ -26,9 +20,7 @@ class App extends Component {
 				This should be left side bar
 			</section>
 			<section id='map-container'>
-				<MapContainer 
-					markersLocations={this.state.markersLocations}
-				/>
+				<MapContainer />
 			</section>
         </main>
       </div>
