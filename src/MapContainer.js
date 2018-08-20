@@ -12,19 +12,16 @@ class MapContainer extends Component {
 		super(props)
 	}
 		 
+	static propTypes = {
+		markersLocations: PropTypes.array.isRequired
+	}
+		
 	state = {
         map: {},	  	// object
         markers: [],  	// array of objects - store the created markers
         markersInfoWindows: [],	// object
 		openWindow: false, // Store the ID of the marker with infoWindow opened
-		markersLocations: []
     }
-	
-	setMarkersLocations = (locations) => {
-		this.setState({
-			markersLocations: locations
-		})
-	}
 	
 	// Insert Google Map API script
 	componentDidMount () {
@@ -49,7 +46,6 @@ class MapContainer extends Component {
 		});
 		
 		// Initialize marker locations, then create markers
-		this.setMarkersLocations(markerLocations);
 		this.createMarkers();
 	}
 	
@@ -79,7 +75,7 @@ class MapContainer extends Component {
 		let infoWindows =[];
 				
 		// Create all the initial markers
-		let markers = this.state.markersLocations.map((location, index) => {
+		let markers = this.props.markersLocations.map((location, index) => {
 			// Create each marker
 			const marker = new window.google.maps.Marker({
 				map: this.map,
