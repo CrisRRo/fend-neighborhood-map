@@ -2,20 +2,29 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { markerLocations } from './AppData.js'
-import * as AppData from './AppData'
 import MapContainer from './MapContainer.js';
 
 
 class App extends Component {
   	state = {
-		activeLocations: []
+		activeLocations: [], // DE STERS
+		allInitialMarkers: []
     }
-	
+
+	// DE STERS
 	setMarkersLocations = (locations) => {
 		this.setState({
 			activeLocations: locations
 		})
 	}
+	
+	storeAllInitialMarkers = (markers) => {
+		this.setState({
+			allInitialMarkers: markers
+		})
+	}
+	
+	
   
 	render() {
 		return (
@@ -26,11 +35,24 @@ class App extends Component {
 			</header>
 			<main className="App-intro">
 				<section id='left-side-bar'>
-					This should be left side bar
+					Recommended places for one day
+					
+					{console.log(this.state.allInitialMarkers)}
+					
+					<ul class='the-list'>
+					{this.state.allInitialMarkers.map(marker => (
+						<li key={marker.position} className='marker-title'>
+							{marker.title}
+								{console.log(marker.title)}
+						</li>
+					))}
+					</ul>
+					
 				</section>
 				<section id='map-container'>
 					<MapContainer 
 						markersLocations={markerLocations}
+						getAllInitialMarkers={this.storeAllInitialMarkers}
 					/>
 				</section>
 			</main>

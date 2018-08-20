@@ -49,6 +49,14 @@ section {
   color: red;
 }
 
+.the-list li { 
+	border-bottom: 1px solid black; 
+}
+
+.marker-title {
+	text-align: left;
+}
+
 /* ====================== MY RESPONSIVE DESIGN ====================== */
 
 /* It is recommended to add a catch all for image in the main  CSS */

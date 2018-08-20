@@ -6,12 +6,10 @@ import pinkFlag2 from './icons/pinkFlag2.png'
 import greenFlag2 from './icons/greenFlag2.png'
 
 class MapContainer extends Component {
-	constructor(props) {
-		super(props)
-	}
 		 
 	static propTypes = {
-		markersLocations: PropTypes.array.isRequired
+		markersLocations: PropTypes.array.isRequired,
+		getAllInitialMarkers: PropTypes.func
 	}
 		
 	state = {
@@ -115,6 +113,8 @@ class MapContainer extends Component {
 	
 		// Extend the boundaries of the map for each marker
 		this.map.fitBounds(bounds);
+		
+		this.props.getAllInitialMarkers(markers);
 	}
 	
 	// Function to populate infoWindows
@@ -155,6 +155,7 @@ class MapContainer extends Component {
 								<hr>
 								Success!
 							</div>`);
+// https://developers.google.com/maps/documentation/javascript/infowindows 
 						} else {
 							markerInfowindow.setContent(
 							`<div>
