@@ -44,6 +44,11 @@ section {
   to { transform: rotate(360deg); }
 }
 
+.error-display {
+  display: block;
+  color: red;
+}
+
 /* ====================== MY RESPONSIVE DESIGN ====================== */
 
 /* It is recommended to add a catch all for image in the main  CSS */

@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { markerLocations } from "./AppData.js"
-import * as AppData from './AppData'
+import { getFoursqPlaceId, getVenueDetails } from './InfoWindow.js';
 // importing the marker icons
-import pinkFlag from './icons/pinkFlag.png'
 import pinkFlag2 from './icons/pinkFlag2.png'
 import greenFlag2 from './icons/greenFlag2.png'
 
@@ -75,12 +73,12 @@ class MapContainer extends Component {
 		let infoWindows =[];
 				
 		// Create all the initial markers
-		let markers = this.props.markersLocations.map((location, index) => {
+		let markers = this.props.markersLocations.map((location, index) => {	
 			// Create each marker
 			const marker = new window.google.maps.Marker({
 				map: this.map,
 				position: location.latLong,
-				id: location.id,
+				//id: location.id,
 				title: location.title,
 				icon: this.defaultIcon,
 				animation: window.google.maps.Animation.DROP
@@ -123,13 +121,59 @@ class MapContainer extends Component {
 	populateInfoWindow = (marker, markerInfowindow) => {
 				
 		// Check that infowindow is not already opened on this marker => so open an infowindow
-		if (markerInfowindow.marker != marker) {
+		if (markerInfowindow.marker !== marker) {
 			
 			// Change all marker icons to their default state
 			this.state.markers.map(marker => marker.setIcon(this.defaultIcon))	
 			
 			markerInfowindow.marker = marker;
-			markerInfowindow.setContent('<div>' + marker.title + '</div>');
+					
+			// Set temporary infowindow content, until loading all the details
+			const title = `<strong>${marker.title}</strong>`
+			markerInfowindow.setContent(
+				`<div>
+					${title}
+					<hr>
+					Loading details...
+				</div>`);
+			
+			// Get place ID from Foursquare using lat&long
+			const placeLatLong=marker.position.lat()+','+marker.position.lng();
+
+			getFoursqPlaceId(placeLatLong)
+			.then(data => data.response.venues[0].id)
+			.then(id => {
+				getVenueDetails(id)
+					.then(r => r.json())
+					.then(data => {
+						console.log(data.response.venue);
+						// Response from Foursquare is OK
+						if (data.meta.code === 200) {
+							markerInfowindow.setContent(
+							`<div>
+								${title}
+								<hr>
+								Success!
+							</div>`);
+						} else {
+							markerInfowindow.setContent(
+							`<div>
+								${title}
+								<hr>
+								<div className='error-display'>Sorry, but details for this place could not be loaded!</div>
+							</div>`);
+						}
+					})
+			})
+			.catch( error => {
+				markerInfowindow.setContent(
+				`<div>
+					${title}
+					<hr>
+					<div class='error-display'>Sorry, but there was an error while loading place details!</div>
+				</div>`);
+			})
+
 			markerInfowindow.open(this.map, marker);
 
 			// The marker is clicked, so change the icon

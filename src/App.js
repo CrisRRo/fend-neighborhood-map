@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { markerLocations } from "./AppData.js"
+import { markerLocations } from './AppData.js'
+import * as AppData from './AppData'
 import MapContainer from './MapContainer.js';
 
 
