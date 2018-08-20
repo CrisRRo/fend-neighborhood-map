@@ -72,6 +72,9 @@ class MapContainer extends Component {
 			maxWidth: 300
 		});
 		
+		// Instantiate bounds for our markers
+		const bounds = new window.google.maps.LatLngBounds();
+		
 		// Store temporary all created infoWindows
 		let infoWindows =[];
 				
@@ -106,6 +109,8 @@ class MapContainer extends Component {
 		
 			infoWindows.push(markerInfowindow);
 		  
+			bounds.extend(marker.position);
+		  
 			return marker;
 		})
 		
@@ -114,7 +119,8 @@ class MapContainer extends Component {
 			markersInfoWindows: infoWindows
 		});
 	
-
+		// Extend the boundaries of the map for each marker
+		this.map.fitBounds(bounds);
 	}
 	
 	// Function to populate infoWindows
