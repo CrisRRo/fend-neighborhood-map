@@ -26,7 +26,6 @@ section {
 
 .App-header {
   background-color: #222;
-  height: 150px;
   padding: 20px;
   color: white;
 }
@@ -44,17 +43,86 @@ section {
   to { transform: rotate(360deg); }
 }
 
+h3 {
+	padding: 0 5px 0 5px;
+}
+
+h4 {
+	margin: 5px;
+}
+
 .error-display {
   display: block;
   color: red;
 }
 
+/* Hamburger menu */
+#burger-menu {
+    font-size: 1.5em;
+	margin-left: 20px;
+	margin-top: 30px;
+    color: #fff;
+	display: inline-block;
+	cursor: pointer;
+	float: left;
+	visibility: hidden;
+}
+
+.burger1, .burger2, .burger3 {
+	width: 35px;
+	height: 5px;
+	background-color: #fff;
+	margin: 6px 0;
+	transition: 0.4s;
+}
+
+.change .burger1 {
+    -webkit-transform: rotate(-45deg) translate(-9px, 6px);
+    transform: rotate(-45deg) translate(-9px, 6px);
+}
+
+.change .burger2 {opacity: 0;}
+
+.change .burger3 {
+    -webkit-transform: rotate(45deg) translate(-8px, -8px);
+    transform: rotate(45deg) translate(-8px, -8px);
+}
+
+#left-side-bar.open{
+	width: 30%;
+	display: block;
+}
+
+#map-container.open{
+	width: 70%;
+}
+
+/* List of places from the left side bar */
+
+.the-list {
+	padding: 0 10px 0 10px;
+}
+
 .the-list li { 
-	border-bottom: 1px solid black; 
+	border-bottom: 1px solid black;
+	list-style: none;
+	padding-left: 0;
 }
 
 .marker-title {
 	text-align: left;
+	font-family: Consolas, monaco, monospace; 
+	font-size: 14px; 
+	padding: 5px;
+}
+
+.marker-title:before {
+  content: "# ";
+}
+
+.marker-title a:hover,
+.marker-title a:active {
+  text-decoration: underline;
 }
 
 /* ====================== MY RESPONSIVE DESIGN ====================== */
@@ -92,17 +160,39 @@ body {
   min-height: 500px;
 }
 
-#left-side-bar{
-	width: 30%;
-	min-height: 100%;
-}
-
-#map-container{
-	width: 70%;
-	min-height: 100%;
-}
-
 #map-content{
 	width: 100%;
 	height: 100%;
+}
+
+@media screen and (max-width: 599px){
+	#burger-menu {
+		visibility: visible;
+	}
+	
+	#left-side-bar{
+		width: 0%;
+		min-height: 100%;
+	}
+
+	#map-container{
+		width: 100%;
+		min-height: 100%;
+	}
+	
+	h3 {
+		font-size: 18px;
+	}
+}
+
+@media screen and (min-width: 600px){
+	#left-side-bar{
+		width: 30%;
+		min-height: 100%;
+	}
+
+	#map-container{
+		width: 70%;
+		min-height: 100%;
+	}
 }

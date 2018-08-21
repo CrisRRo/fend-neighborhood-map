@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import { markerLocations } from './AppData.js'
 import MapContainer from './MapContainer.js';
-
+import LeftSideBar from './LeftSideBar.js'
 
 class App extends Component {
   	state = {
@@ -24,31 +23,34 @@ class App extends Component {
 		})
 	}
 	
+	componentDidMount = () => {
+		this.menu = document.getElementById('burger-menu')
+		this.leftBar = document.getElementById('left-side-bar')
+		this.mapContainer = document.getElementById('map-container')
+	}
 	
+	onMenuClick = () => {
+		this.menu.classList.toggle("change");
+		this.leftBar.classList.toggle("open");
+		this.mapContainer.classList.toggle("open");
+	}
   
 	render() {
 		return (
 		  <div className="App">
+			<div id='burger-menu' role='button' tabIndex='0' aria-label='menu' onClick={this.onMenuClick}>
+				<div className='burger1'></div>
+				<div className='burger2'></div>
+				<div className='burger3'></div>
+			</div>
 			<header className="App-header">
-			  <img src={logo} className="App-logo" alt="logo" />
 			  <h1 className="App-title">Bucharest Old Town Map</h1>
 			</header>
 			<main className="App-intro">
-				<section id='left-side-bar'>
-					Recommended places for one day
-					
-					{console.log(this.state.allInitialMarkers)}
-					
-					<ul class='the-list'>
-					{this.state.allInitialMarkers.map(marker => (
-						<li key={marker.position} className='marker-title'>
-							{marker.title}
-								{console.log(marker.title)}
-						</li>
-					))}
-					</ul>
-					
-				</section>
+
+					<LeftSideBar markers={this.state.allInitialMarkers} />
+
+				
 				<section id='map-container'>
 					<MapContainer 
 						markersLocations={markerLocations}

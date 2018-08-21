@@ -129,7 +129,7 @@ class MapContainer extends Component {
 			markerInfowindow.marker = marker;
 					
 			// Set temporary infowindow content, until loading all the details
-			const title = `<strong>${marker.title}</strong>`
+			const title = `<h4>${marker.title}</h4>`
 			markerInfowindow.setContent(
 				`<div>
 					${title}
