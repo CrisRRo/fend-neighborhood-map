@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import escapeRegExp from 'escape-string-regexp'
+import sortBy from 'sort-by'
 
 class LeftSideBar extends Component {
 	static propTypes = {
@@ -18,15 +20,15 @@ class LeftSideBar extends Component {
 		})
 	}
 	
-	updateId = (id) => {
-		this.setState({
-			id: id
-		})
-	}
-	
 	clearQuery = () => {
 		this.setState({
 			query: ''
+		})
+	}
+	
+	updateId = (id) => {
+		this.setState({
+			id: id
 		})
 	}
 
@@ -67,6 +69,8 @@ class LeftSideBar extends Component {
 	  const { markersLocations } = this.props;
 	  const { query } = this.state;
 	  
+
+	  
 	  return (
 		<section id='left-side-bar' role='navigation'>
 			<h3>Recommended places for one day</h3>
@@ -75,6 +79,7 @@ class LeftSideBar extends Component {
 				className='search-places'
 				type='text'
 				placeholder='Search places'
+				aria-label='Search places'
 				value={query}
 				onChange={(event) => this.updateQuery(event.target.value)}
 			/>

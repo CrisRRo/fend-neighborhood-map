@@ -99,15 +99,16 @@ h4 {
 
 /* Search */
 .search-places {
-  width: 100%;
-  padding: 20px 20px 20px 60px;
+  width: 70%;
+  padding: 0px 0px 0px 25px;
+  margin-top: 20px;
+  margin-bottom: 20px;
   background-image: url('./icons/search.svg');
   background-repeat: no-repeat;
-  background-position: 20px center;
+  background-position: 20px left;
   background-size: 1.2em;
-  font-size: 1.2em;
+  font-size: 1em;
   color: #FF00FF;
-  border: 0;
   outline: none;
 }
 
@@ -202,6 +203,10 @@ body {
 	
 	h3 {
 		font-size: 18px;
+	}
+	
+	.search-places {
+	  font-size: 0.9em;
 	}
 }
 

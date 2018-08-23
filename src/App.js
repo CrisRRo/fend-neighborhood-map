@@ -7,17 +7,17 @@ import LeftSideBar from './LeftSideBar.js'
 class App extends Component {
   	state = {
 		markersLocations: initialLocations,
-		filteredLocations: [], // DE STERS
+		activeLocations: [], // il trnsfer in harta
 		activeMarkers: [],
 		allInitialMarkers: [],
 		allInitialInfowindows: [],
 		map: {},
-		needToOpenInfoWindow: false // DE STERS
+		idToOpenInfowindow: 'noId'
     }
 	
-	updateNeedToOpenInfoWindow = (val) => {
+	updateIdToOpenInfowindow = (val) => {
 		this.setState({
-			needToOpenInfoWindow: val
+			idToOpenInfowindow: val
 		})
 	}
 	
@@ -123,7 +123,6 @@ class App extends Component {
 				{console.log('Left side bar - inainte')}
 				<LeftSideBar
 					markersLocations={this.state.markersLocations}
-						
 					handleMarkersLocations={this.updateMarkerLocations}
 				/>
 				{console.log('Left side bar - dupa')}

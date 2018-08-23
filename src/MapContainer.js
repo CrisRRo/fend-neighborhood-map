@@ -18,18 +18,11 @@ class MapContainer extends Component {
         map: {},	  	// object
         markers: [],  	// store the created markers
 		openWindow: false, // Show if the infoWindow is opened or not on a marker
-		windowsUpdates: false, // Keep track if user press on the left side bar so that we need to open the corresponding infowindow
     }
 	
 	// DE STERS
 	consola = () => {
 		console.log('Si in return se vede markerul')
-	}
-	
-	handleWindowsUpdates = (val) => {
-		this.setState({
-			windowsUpdates: val
-		})
 	}
 	
 	componentWillMount = () => {
@@ -47,7 +40,6 @@ class MapContainer extends Component {
 	
 	componentDidUpdate = () => {
 		console.log('MapContainer component DID UPDATE');
-
 	}
 
 	
@@ -131,6 +123,7 @@ class MapContainer extends Component {
 				this.setState({
 					openWindow: false
 				})
+				console.log('Open window set to FALSE')
 			});
 		
 			infoWindows.push(markerInfowindow);
@@ -229,11 +222,10 @@ class MapContainer extends Component {
 			this.setState({
 				openWindow: true
 			})
+			console.log('Open window set to TRUE')
 			
 			// TODO: Set all infowindows to false?
-			if (this.state.windowsUpdates) {
-				this.handleWindowsUpdates(false);
-			}
+
 		}
 	}
 
