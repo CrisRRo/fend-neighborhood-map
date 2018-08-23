@@ -6,21 +6,54 @@ import pinkFlag2 from './icons/pinkFlag2.png'
 import greenFlag2 from './icons/greenFlag2.png'
 
 class MapContainer extends Component {
-		 
+	
 	static propTypes = {
 		markersLocations: PropTypes.array.isRequired,
-		getAllInitialMarkers: PropTypes.func
+		getAllInitialMarkers: PropTypes.func,
+		getAllInitialInfowindows: PropTypes.func,
+		getMap: PropTypes.func
 	}
 		
 	state = {
         map: {},	  	// object
-        markers: [],  	// array of objects - store the created markers
-        markersInfoWindows: [],	// object
-		openWindow: false, // Store the ID of the marker with infoWindow opened
+        markers: [],  	// store the created markers
+		openWindow: false, // Show if the infoWindow is opened or not on a marker
+		windowsUpdates: false, // Keep track if user press on the left side bar so that we need to open the corresponding infowindow
     }
 	
+	// DE STERS
+	consola = () => {
+		console.log('Si in return se vede markerul')
+	}
+	
+	handleWindowsUpdates = (val) => {
+		this.setState({
+			windowsUpdates: val
+		})
+	}
+	
+	componentWillMount = () => {
+		console.log('MapContainer component WILL mount');
+	}
+	
+	componentWillUnmount = () => {
+		console.log('MapContainer component WILL UNMOUNT');
+	}
+	
+	shouldComponentUpdate = () => {
+		console.log('MapContainer component SHOULD UPDATE');
+		return true;
+	}
+	
+	componentDidUpdate = () => {
+		console.log('MapContainer component DID UPDATE');
+
+	}
+
+	
 	// Insert Google Map API script
-	componentDidMount () {
+	componentDidMount = () => {
+		console.log('MapContainer component DID mount')
 		const script = document.createElement('script');
 		
 		script.src = 		'https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyDV-dtGMk8LBbgrxByBIlwmjgWOvzJ6rYM&v=3&callback=initMap';
@@ -60,7 +93,6 @@ class MapContainer extends Component {
 		
 		// Instantiate infoWindow - Constanta asta este un obiect
 		const markerInfowindow = new window.google.maps.InfoWindow({
-			// content: "Prima fereastra",
 			maxWidth: 300
 		});
 		
@@ -68,15 +100,17 @@ class MapContainer extends Component {
 		const bounds = new window.google.maps.LatLngBounds();
 		
 		// Store temporary all created infoWindows
-		let infoWindows =[];
+		let infoWindows = [];
 				
 		// Create all the initial markers
-		let markers = this.props.markersLocations.map((location, index) => {	
+		let markers = this.props.markersLocations
+		  .filter(location => location.active)
+		  .map((location) => {
 			// Create each marker
 			const marker = new window.google.maps.Marker({
 				map: this.map,
 				position: location.latLong,
-				//id: location.id,
+				id: location.id,
 				title: location.title,
 				icon: this.defaultIcon,
 				animation: window.google.maps.Animation.DROP
@@ -100,26 +134,28 @@ class MapContainer extends Component {
 			});
 		
 			infoWindows.push(markerInfowindow);
-		  
+			
 			bounds.extend(marker.position);
 		  
 			return marker;
 		})
 		
 		this.setState({
-			markers: markers,
-			markersInfoWindows: infoWindows
+			markers: markers
 		});
 	
 		// Extend the boundaries of the map for each marker
 		this.map.fitBounds(bounds);
 		
+		// Store in the App.js the map, all initial markers and infowindows
 		this.props.getAllInitialMarkers(markers);
+		this.props.getAllInitialInfowindows(infoWindows);
+		this.props.getMap(this.map);
 	}
 	
 	// Function to populate infoWindows
 	populateInfoWindow = (marker, markerInfowindow) => {
-				
+		
 		// Check that infowindow is not already opened on this marker => so open an infowindow
 		if (markerInfowindow.marker !== marker) {
 			
@@ -140,6 +176,7 @@ class MapContainer extends Component {
 			// Get place ID from Foursquare using lat&long
 			const placeLatLong=marker.position.lat()+','+marker.position.lng();
 
+			/* 
 			getFoursqPlaceId(placeLatLong)
 			.then(data => data.response.venues[0].id)
 			.then(id => {
@@ -173,8 +210,16 @@ class MapContainer extends Component {
 					<hr>
 					<div class='error-display'>Sorry, but there was an error while loading place details!</div>
 				</div>`);
-			})
+			}) */
 
+			// DE STERS SI DE ACTIVAT CE E MAI SUS
+			markerInfowindow.setContent(
+				`<div>
+					${title}
+					<hr>
+					<div class='error-display'>BRAVOSS! HAI CA POTI CRISTINA</div>
+				</div>`)
+				
 			markerInfowindow.open(this.map, marker);
 
 			// The marker is clicked, so change the icon
@@ -184,12 +229,45 @@ class MapContainer extends Component {
 			this.setState({
 				openWindow: true
 			})
-		} 
+			
+			// TODO: Set all infowindows to false?
+			if (this.state.windowsUpdates) {
+				this.handleWindowsUpdates(false);
+			}
+		}
 	}
 
-	render() {			
-		return (
-			<div id='map-content' role='application' aria-label='A map of Bucharest Old Town'></div>
+	render = () => {
+		const { markers } = this.state;
+		const { markersLocations } = this.props;
+		
+		console.log('Sunt in MapContainer.js RENDER');
+		
+		// Find the location that we should open the infowindow (true)
+		let theLocation = markersLocations.filter(loc => loc.infowindow)[0];
+		
+		// Only if this location has at least 1 element, we can open the infowindow
+		if (theLocation) {  
+
+			// Find the marker with this id and trigger click on it
+			let theMarker  = markers.filter(mk => mk.id === theLocation.id)[0];
+
+			if (theMarker) {
+				window.google.maps.event.trigger(theMarker, 'click')
+			}
+		}
+			
+		return 	(
+		<div id='map-content' role='application' aria-label='A map of Bucharest Old Town'>
+		
+		
+			{
+				false ? this.consola() : 5
+			}
+
+			
+		
+		</div>
 		)
 	}
 
