@@ -18,7 +18,14 @@ class MapContainer extends Component {
         map: {},	  	// object
         markers: [],  	// store the created markers
 		openWindow: false, // Show if the infoWindow is opened or not on a marker
+		prevIdOpened: '' // Keep the id of the marker we opened the infowindow manually
     }
+	
+	updatePrevIdOpened = (prevId) => {
+		this.setState({
+			prevIdOpened: prevId
+		})
+	}
 	
 	// DE STERS
 	consola = () => {
@@ -148,6 +155,10 @@ class MapContainer extends Component {
 	
 	// Function to populate infoWindows
 	populateInfoWindow = (marker, markerInfowindow) => {
+		// Check if infowindow is not open from left side bar
+		// All 'infowindow' in the initial locations array should be false
+		// Get the id of the locations that is already open
+		
 		
 		// Check that infowindow is not already opened on this marker => so open an infowindow
 		if (markerInfowindow.marker !== marker) {
@@ -230,22 +241,29 @@ class MapContainer extends Component {
 	}
 
 	render = () => {
-		const { markers } = this.state;
+		const { markers, prevIdOpened } = this.state;
 		const { markersLocations } = this.props;
 		
 		console.log('Sunt in MapContainer.js RENDER');
 		
+		let idToOpen;
 		// Find the location that we should open the infowindow (true)
 		let theLocation = markersLocations.filter(loc => loc.infowindow)[0];
+		
 		
 		// Only if this location has at least 1 element, we can open the infowindow
 		if (theLocation) {  
 
 			// Find the marker with this id and trigger click on it
 			let theMarker  = markers.filter(mk => mk.id === theLocation.id)[0];
-
+			
 			if (theMarker) {
-				window.google.maps.event.trigger(theMarker, 'click')
+				idToOpen = theMarker.id;
+				// Open the window only if the id changed
+				if (prevIdOpened !== idToOpen) {
+					window.google.maps.event.trigger(theMarker, 'click');
+					this.updatePrevIdOpened(idToOpen);
+				}
 			}
 		}
 			

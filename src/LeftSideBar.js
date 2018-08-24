@@ -6,38 +6,26 @@ import sortBy from 'sort-by'
 class LeftSideBar extends Component {
 	static propTypes = {
 		markersLocations: PropTypes.array.isRequired,
-		handleMarkersLocations: PropTypes.func.isRequired
+		locationsToBeListed: PropTypes.array.isRequired,
+		handleMarkersLocations: PropTypes.func.isRequired,
+		transferQuery: PropTypes.func.isRequired
 	}
 	
 	state = {
-		query: '',
-		id: ''
+		query: ''
 	}
 	
 	updateQuery = (prevUserInput) => {
 		this.setState({
 			query: prevUserInput.trim()
 		})
-	}
-	
-	clearQuery = () => {
-		this.setState({
-			query: ''
-		})
-	}
-	
-	updateId = (id) => {
-		this.setState({
-			id: id
-		})
+		this.props.transferQuery(prevUserInput)
 	}
 
+	// The infowindow should be opened for this id =>
+	// Update the infowindow state for this location 
+	// in the initial locations array
 	transferLocationId = (id) => {
-		console.log(id);
-		
-		// The infowindow should be opened for this id =>
-		// Update the infowindow state for this location 
-		// in the initial locations array
 		this.props.handleMarkersLocations(this.props.markersLocations, id)
 	}
 
@@ -66,10 +54,11 @@ class LeftSideBar extends Component {
 	render = () => {
 	  console.log('Sunt in LeftSideBar.js RENDER');
 	  
-	  const { markersLocations } = this.props;
+	  const { markersLocations, locationsToBeListed } = this.props;
 	  const { query } = this.state;
 	  
-
+	  // If locations are not filtered by user input, then list the initial locations
+	  let actualLocations = locationsToBeListed.length === 0 ? markersLocations : locationsToBeListed;
 	  
 	  return (
 		<section id='left-side-bar' role='navigation'>
@@ -85,7 +74,7 @@ class LeftSideBar extends Component {
 			/>
 			
 			<ul className='the-list' role='listbox'>
-				{markersLocations
+				{actualLocations
 				  .filter(location => location.active)
 				  .map(location => (
 					<li key={location.id} className='marker-title' role='button' tabIndex='0' onClick={() => this.transferLocationId(location.id)} onKeyDown={(event) => event.keyCode === 13 && this.transferLocationId(location.id)}>

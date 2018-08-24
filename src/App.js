@@ -7,19 +7,11 @@ import LeftSideBar from './LeftSideBar.js'
 class App extends Component {
   	state = {
 		markersLocations: initialLocations,
-		activeLocations: [], // il trnsfer in harta
-		activeMarkers: [],
+		locationsToBeListed: [],
 		allInitialMarkers: [],
 		allInitialInfowindows: [],
-		map: {},
-		idToOpenInfowindow: 'noId'
+		map: {}
     }
-	
-	updateIdToOpenInfowindow = (val) => {
-		this.setState({
-			idToOpenInfowindow: val
-		})
-	}
 	
 	updateMarkerLocations = (locations, id = 'noId') => {
 		console.log(this.state.markersLocations);
@@ -93,6 +85,11 @@ class App extends Component {
 		this.leftBar.classList.toggle("open");
 		this.mapContainer.classList.toggle("open");
 	}
+	
+	handleQuery = (userInput) => {
+		// TODO
+		console.log('Asta a tastat userul: ' + userInput)
+	}
   
 	render = () => {
 		console.log('Sunt in App.js render');
@@ -124,6 +121,8 @@ class App extends Component {
 				<LeftSideBar
 					markersLocations={this.state.markersLocations}
 					handleMarkersLocations={this.updateMarkerLocations}
+					locationsToBeListed={this.state.locationsToBeListed}
+					transferQuery={this.handleQuery}
 				/>
 				{console.log('Left side bar - dupa')}
 				
@@ -132,7 +131,7 @@ class App extends Component {
 					<MapContainer
 						markersLocations={this.state.markersLocations}
 						handleMarkersLocations={this.updateMarkerLocations}
-
+						idToOpenWindow={this.state.idToOpenInfowindow}
 						getAllInitialMarkers={this.storeAllInitialMarkers} getAllInitialInfowindows={this.storeAllInitialInfowindows} 
 						getMap={this.storeMap}
 					/>
