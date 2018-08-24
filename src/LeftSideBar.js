@@ -58,8 +58,12 @@ class LeftSideBar extends Component {
 	  const { query } = this.state;
 	  
 	  // If locations are not filtered by user input, then list the initial locations
+	  // let actualLocations = locationsToBeListed.length === 0 || locationsToBeListed[0] === 'noMatch' ? markersLocations : locationsToBeListed;
 	  let actualLocations = locationsToBeListed.length === 0 ? markersLocations : locationsToBeListed;
 	  
+	  console.log('LOcatiile de listat in bara stanga')
+	  console.log(actualLocations)
+
 	  return (
 		<section id='left-side-bar' role='navigation'>
 			<h3>Recommended places for one day</h3>

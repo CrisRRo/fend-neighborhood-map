@@ -62,6 +62,15 @@ class App extends Component {
 		})
 	}
 	
+	updatelocationsToBeListed = (val = []) => {
+		console.log('Sunt in updatare locatii de listat');
+		console.log(val);
+
+		this.setState({
+			locationsToBeListed: val
+		})
+	}
+
 	componentDidMount = () => {
 		this.menu = document.getElementById('burger-menu')
 		this.leftBar = document.getElementById('left-side-bar')
@@ -87,8 +96,27 @@ class App extends Component {
 	}
 	
 	handleQuery = (userInput) => {
-		// TODO
+		const { locationsToBeListed, markersLocations } = this.state
+
+		let filteredLocations = markersLocations.filter((loc) => loc.title.toLowerCase().includes(userInput.toLowerCase()))
+
+		// Update locations to be listed
 		console.log('Asta a tastat userul: ' + userInput)
+		if (userInput === '') {
+			this.updatelocationsToBeListed();
+			console.log('Am setat locatiile pe 0')
+		} else if (filteredLocations.length === 0) {
+				console.log('Locatiile trebuie sa aiba continutul asta');
+				console.log(filteredLocations);
+
+				this.updatelocationsToBeListed(['noMatch']);
+				console.log('Am setat locatiile pe 0 din nou')
+			} else {
+				console.log('Locatiile trebuie sa aiba continutul asta');
+				console.log(filteredLocations);
+
+				this.updatelocationsToBeListed(filteredLocations);
+			}
 	}
   
 	render = () => {

@@ -100,7 +100,7 @@ class MapContainer extends Component {
 		
 		// Store temporary all created infoWindows
 		let infoWindows = [];
-				
+
 		// Create all the initial markers
 		let markers = this.props.markersLocations
 		  .filter(location => location.active)
@@ -252,7 +252,7 @@ class MapContainer extends Component {
 		
 		
 		// Only if this location has at least 1 element, we can open the infowindow
-		if (theLocation) {  
+		if (theLocation) {
 
 			// Find the marker with this id and trigger click on it
 			let theMarker  = markers.filter(mk => mk.id === theLocation.id)[0];
