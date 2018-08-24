@@ -9,6 +9,7 @@ class MapContainer extends Component {
 	
 	static propTypes = {
 		markersLocations: PropTypes.array.isRequired,
+		locationsToBeListed: PropTypes.array.isRequired,
 		getAllInitialMarkers: PropTypes.func,
 		getAllInitialInfowindows: PropTypes.func,
 		getMap: PropTypes.func
@@ -20,6 +21,12 @@ class MapContainer extends Component {
 		openWindow: false, // Show if the infoWindow is opened or not on a marker
 		prevIdOpened: '' // Keep the id of the marker we opened the infowindow manually
     }
+	
+	updateMap = (map) => {
+		this.setState({
+			map: map
+		})
+	}
 	
 	updatePrevIdOpened = (prevId) => {
 		this.setState({
@@ -68,16 +75,16 @@ class MapContainer extends Component {
 	}
 	
 	initMap = () => {
-		this.map = new window.google.maps.Map(document.getElementById('map-content'), {
+		const myMap = new window.google.maps.Map(document.getElementById('map-content'), {
 			center: {lat: 44.431474, lng: 26.100319},
 			zoom: 15
 		});
 		
 		// Initialize marker locations, then create markers
-		this.createMarkers();
+		this.createMarkers(myMap);
 	}
 	
-	createMarkers = () => {
+	createMarkers = (myMap) => {
 		// Default icon style
 		this.defaultIcon = {
 			url: pinkFlag2,
@@ -107,7 +114,7 @@ class MapContainer extends Component {
 		  .map((location) => {
 			// Create each marker
 			const marker = new window.google.maps.Marker({
-				map: this.map,
+				map: myMap,
 				position: location.latLong,
 				id: location.id,
 				title: location.title,
@@ -145,12 +152,16 @@ class MapContainer extends Component {
 		});
 	
 		// Extend the boundaries of the map for each marker
-		this.map.fitBounds(bounds);
+		myMap.fitBounds(bounds);
+		
+		// Update map state
+		this.updateMap(myMap);
 		
 		// Store in the App.js the map, all initial markers and infowindows
 		this.props.getAllInitialMarkers(markers);
 		this.props.getAllInitialInfowindows(infoWindows);
-		this.props.getMap(this.map);
+		this.props.getMap(myMap);
+		
 	}
 	
 	// Function to populate infoWindows
@@ -224,7 +235,7 @@ class MapContainer extends Component {
 					<div class='error-display'>BRAVOSS! HAI CA POTI CRISTINA</div>
 				</div>`)
 				
-			markerInfowindow.open(this.map, marker);
+			markerInfowindow.open(this.state.map, marker);
 
 			// The marker is clicked, so change the icon
 			marker.setIcon(this.changedIcon);
@@ -250,7 +261,6 @@ class MapContainer extends Component {
 		// Find the location that we should open the infowindow (true)
 		let theLocation = markersLocations.filter(loc => loc.infowindow)[0];
 		
-		
 		// Only if this location has at least 1 element, we can open the infowindow
 		if (theLocation) {
 
@@ -266,7 +276,9 @@ class MapContainer extends Component {
 				}
 			}
 		}
-			
+		
+		let actualLocations = this.props.locationsToBeListed.length === 0 ? this.props.markersLocations : this.props.locationsToBeListed;
+		
 		return 	(
 		<div id='map-content' role='application' aria-label='A map of Bucharest Old Town'>
 		

@@ -159,6 +159,7 @@ class App extends Component {
 					<MapContainer
 						markersLocations={this.state.markersLocations}
 						handleMarkersLocations={this.updateMarkerLocations}
+						locationsToBeListed={this.state.locationsToBeListed}
 						idToOpenWindow={this.state.idToOpenInfowindow}
 						getAllInitialMarkers={this.storeAllInitialMarkers} getAllInitialInfowindows={this.storeAllInitialInfowindows} 
 						getMap={this.storeMap}
