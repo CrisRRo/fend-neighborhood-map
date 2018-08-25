@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { getFoursqPlaceId, getVenueDetails } from './InfoWindow.js';
-// importing the marker icons
 import pinkFlag2 from './icons/pinkFlag2.png'
 import greenFlag2 from './icons/greenFlag2.png'
 
@@ -9,12 +8,9 @@ class MapContainer extends Component {
 	
 	static propTypes = {
 		markersLocations: PropTypes.array.isRequired,
-		locationsToBeListed: PropTypes.array.isRequired,
-		getAllInitialMarkers: PropTypes.func,
-		getAllInitialInfowindows: PropTypes.func,
-		getMap: PropTypes.func
+		locationsToBeListed: PropTypes.array.isRequired
 	}
-		
+						
 	state = {
         map: {},	  	// object
         markers: [],  	// store the created markers
@@ -34,32 +30,16 @@ class MapContainer extends Component {
 		})
 	}
 	
-	// DE STERS
-	consola = () => {
-		console.log('Si in return se vede markerul')
-	}
-	
-	componentWillMount = () => {
-		console.log('MapContainer component WILL mount');
-	}
-	
-	componentWillUnmount = () => {
-		console.log('MapContainer component WILL UNMOUNT');
-	}
-	
-	shouldComponentUpdate = () => {
-		console.log('MapContainer component SHOULD UPDATE');
-		return true;
-	}
-	
-	componentDidUpdate = () => {
-		console.log('MapContainer component DID UPDATE');
+	componentDidUpdate(prevProps, prevState) {
+	  // only update if the data has changed
+	  if (prevState.prevIdOpened !== this.state.prevIdOpened) {
+		console.log('Previous ID opened: ' + prevState.prevIdOpened);
+		console.log('Actual ID opened' + this.state.prevIdOpened);
+	  }
 	}
 
-	
 	// Insert Google Map API script
 	componentDidMount = () => {
-		console.log('MapContainer component DID mount')
 		const script = document.createElement('script');
 		
 		script.src = 		'https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyDV-dtGMk8LBbgrxByBIlwmjgWOvzJ6rYM&v=3&callback=initMap';
@@ -137,7 +117,6 @@ class MapContainer extends Component {
 				this.setState({
 					openWindow: false
 				})
-				console.log('Open window set to FALSE')
 			});
 		
 			infoWindows.push(markerInfowindow);
@@ -156,21 +135,11 @@ class MapContainer extends Component {
 		
 		// Update map state
 		this.updateMap(myMap);
-		
-		// Store in the App.js the map, all initial markers and infowindows
-		this.props.getAllInitialMarkers(markers);
-		this.props.getAllInitialInfowindows(infoWindows);
-		this.props.getMap(myMap);
-		
 	}
 	
 	// Function to populate infoWindows
 	populateInfoWindow = (marker, markerInfowindow) => {
-		// Check if infowindow is not open from left side bar
-		// All 'infowindow' in the initial locations array should be false
-		// Get the id of the locations that is already open
-		
-		
+
 		// Check that infowindow is not already opened on this marker => so open an infowindow
 		if (markerInfowindow.marker !== marker) {
 			
@@ -191,13 +160,14 @@ class MapContainer extends Component {
 			// Get place ID from Foursquare using lat&long
 			const placeLatLong=marker.position.lat()+','+marker.position.lng();
 
-			/* 
+			
 			getFoursqPlaceId(placeLatLong)
 			.then(data => data.response.venues[0].id)
 			.then(id => {
 				getVenueDetails(id)
 					.then(r => r.json())
 					.then(data => {
+
 						console.log(data.response.venue);
 						// Response from Foursquare is OK
 						if (data.meta.code === 200) {
@@ -206,6 +176,8 @@ class MapContainer extends Component {
 								${title}
 								<hr>
 								Success!
+								${this.showPlaceDetails(data.response.venue)}
+								
 							</div>`);
 // https://developers.google.com/maps/documentation/javascript/infowindows 
 						} else {
@@ -225,15 +197,15 @@ class MapContainer extends Component {
 					<hr>
 					<div class='error-display'>Sorry, but there was an error while loading place details!</div>
 				</div>`);
-			}) */
+			}) 
 
 			// DE STERS SI DE ACTIVAT CE E MAI SUS
-			markerInfowindow.setContent(
+			/*markerInfowindow.setContent(
 				`<div>
 					${title}
 					<hr>
 					<div class='error-display'>BRAVOSS! HAI CA POTI CRISTINA</div>
-				</div>`)
+				</div>`)*/
 				
 			markerInfowindow.open(this.state.map, marker);
 
@@ -244,12 +216,18 @@ class MapContainer extends Component {
 			this.setState({
 				openWindow: true
 			})
-			console.log('Open window set to TRUE')
-			
-			// TODO: Set all infowindows to false?
-
 		}
 	}
+	
+	showPlaceDetails = (venue) => {
+		
+		let descr = '';
+		descr += `<div> 
+						Category: ${venue.categories[0].shortName}
+					</div>`
+		return descr;
+	}
+	
 
 	render = () => {
 		const { markers, prevIdOpened } = this.state;
@@ -257,7 +235,9 @@ class MapContainer extends Component {
 		
 		console.log('Sunt in MapContainer.js RENDER');
 		
-		let idToOpen;
+					/* - - - - - - - */
+		/* Open infowindow when user click on left bar */
+
 		// Find the location that we should open the infowindow (true)
 		let theLocation = markersLocations.filter(loc => loc.infowindow)[0];
 		
@@ -268,7 +248,7 @@ class MapContainer extends Component {
 			let theMarker  = markers.filter(mk => mk.id === theLocation.id)[0];
 			
 			if (theMarker) {
-				idToOpen = theMarker.id;
+				let idToOpen = theMarker.id;
 				// Open the window only if the id changed
 				if (prevIdOpened !== idToOpen) {
 					window.google.maps.event.trigger(theMarker, 'click');
@@ -277,19 +257,48 @@ class MapContainer extends Component {
 			}
 		}
 		
-		let actualLocations = this.props.locationsToBeListed.length === 0 ? this.props.markersLocations : this.props.locationsToBeListed;
+					/* - - - - - - - */
+		/* Hide markers that should not appera on the map */
+		const { locationsToBeListed } = this.props;
+		
+		// First hide all markers and find the markers that should appear on the map
+		console.log('Markerii nostrii')
+		console.log(markers)
+		let markersToBeShown = markers.filter(mk => {
+            mk.setMap(null);
+            return locationsToBeListed.some(loc => loc.id === mk.id)
+        })
+		
+		console.log('Locations to be listes')
+		console.log(locationsToBeListed)
+		console.log('Markers to be shown')
+		console.log(markersToBeShown)
+		
+		console.log(typeof locationsToBeListed[0])
+		// If noMatch
+		if (locationsToBeListed[0] === "noMatch") {
+			console.log('Avem noMatch')
+			markersToBeShown = []
+		} else if (markersToBeShown.length === 0 ) {
+			// If user did not input anything, show all the markers
+			markersToBeShown = markers
+		}
+		
+		console.log('Markers to be shown')
+		console.log(markersToBeShown)
+		
+		console.log('Harta noastra in starea ei')
+		console.log(this.state.map)
+		
+		// If the map is initialized (state object not empty), show the markers on the map 
+		if (!(Object.keys(this.state.map).length === 0 && this.state.map.constructor === Object)) {
+			markersToBeShown.forEach( mk => {
+				mk.setMap(this.state.map);
+			})
+		}
 		
 		return 	(
-		<div id='map-content' role='application' aria-label='A map of Bucharest Old Town'>
-		
-		
-			{
-				false ? this.consola() : 5
-			}
-
-			
-		
-		</div>
+			<div id='map-content' role='application' aria-label='A map of Bucharest Old Town'></div>
 		)
 	}
 

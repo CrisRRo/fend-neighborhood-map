@@ -7,14 +7,10 @@ import LeftSideBar from './LeftSideBar.js'
 class App extends Component {
   	state = {
 		markersLocations: initialLocations,
-		locationsToBeListed: [],
-		allInitialMarkers: [],
-		allInitialInfowindows: [],
-		map: {}
+		locationsToBeListed: []
     }
 	
 	updateMarkerLocations = (locations, id = 'noId') => {
-		console.log(this.state.markersLocations);
 		let updatedLocations;
 		
 		// We have the id of the place the user clicked
@@ -39,33 +35,9 @@ class App extends Component {
 				markersLocations: updatedLocations
 			})
 		}
-		console.log(this.state.markersLocations);
-	}
-	
-	// DE STERS
-	storeAllInitialMarkers = (markers) => {
-		this.setState({
-			allInitialMarkers: markers
-		})
-	}
-	
-	// DE STERS
-	storeAllInitialInfowindows = (infowindows) => {
-		this.setState({
-			allInitialInfowindows: infowindows
-		})
-	}
-	
-	storeMap = (map) => {
-		this.setState({
-			map: map
-		})
 	}
 	
 	updatelocationsToBeListed = (val = []) => {
-		console.log('Sunt in updatare locatii de listat');
-		console.log(val);
-
 		this.setState({
 			locationsToBeListed: val
 		})
@@ -77,63 +49,31 @@ class App extends Component {
 		this.mapContainer = document.getElementById('map-container')
 	}
 	
-	componentDidUpdate = (prevProps, prevState) => {
-		
-		if (this.state.markersLocations !== prevState.markersLocations) {
-            console.log('Avem un infowindow de deschis');
-			
-			this.state.markersLocations.forEach((l) => console.log('This state' + l.infowindow))
-			
-			prevState.markersLocations.forEach((l) => console.log('Prev state' + l.infowindow))
-
-        }
-	}
-	
 	onMenuClick = () => {
 		this.menu.classList.toggle("change");
 		this.leftBar.classList.toggle("open");
 		this.mapContainer.classList.toggle("open");
 	}
 	
+	// Update locations to be listed on left bar
 	handleQuery = (userInput) => {
-		const { locationsToBeListed, markersLocations } = this.state
+		const { markersLocations } = this.state
 
 		let filteredLocations = markersLocations.filter((loc) => loc.title.toLowerCase().includes(userInput.toLowerCase()))
-
-		// Update locations to be listed
-		console.log('Asta a tastat userul: ' + userInput)
+		
 		if (userInput === '') {
+			// User did not write anything
 			this.updatelocationsToBeListed();
-			console.log('Am setat locatiile pe 0')
 		} else if (filteredLocations.length === 0) {
-				console.log('Locatiile trebuie sa aiba continutul asta');
-				console.log(filteredLocations);
-
+				// No location match with the search
 				this.updatelocationsToBeListed(['noMatch']);
-				console.log('Am setat locatiile pe 0 din nou')
 			} else {
-				console.log('Locatiile trebuie sa aiba continutul asta');
-				console.log(filteredLocations);
-
+				// Locations should have this content
 				this.updatelocationsToBeListed(filteredLocations);
 			}
 	}
   
-	render = () => {
-		console.log('Sunt in App.js render');
-		console.log(this.state.markersLocations);
-		
-		// DE STERS
-		let filteredLocations0;
-		if (this.state.markersLocations !== initialLocations) {
-			console.log("S-a modificat locatia");
-			filteredLocations0 = this.state.markersLocations;
-		} else {
-			console.log("Locatiile initiale");
-			filteredLocations0 = initialLocations;
-		}
-		// PANA AICI
-		
+	render = () => {	
 		return (
 		  <div className="App">
 			<div id='burger-menu' role='button' tabIndex='0' aria-label='menu' onClick={this.onMenuClick}>
@@ -145,26 +85,18 @@ class App extends Component {
 				<h1 className="App-title">Bucharest Old Town Map</h1>
 			</header>
 			<main className="App-intro">
-				{console.log('Left side bar - inainte')}
 				<LeftSideBar
 					markersLocations={this.state.markersLocations}
 					handleMarkersLocations={this.updateMarkerLocations}
 					locationsToBeListed={this.state.locationsToBeListed}
 					transferQuery={this.handleQuery}
 				/>
-				{console.log('Left side bar - dupa')}
 				
 				<section id='map-container'>
-					{console.log('Map container - inainte')}
 					<MapContainer
 						markersLocations={this.state.markersLocations}
-						handleMarkersLocations={this.updateMarkerLocations}
 						locationsToBeListed={this.state.locationsToBeListed}
-						idToOpenWindow={this.state.idToOpenInfowindow}
-						getAllInitialMarkers={this.storeAllInitialMarkers} getAllInitialInfowindows={this.storeAllInitialInfowindows} 
-						getMap={this.storeMap}
 					/>
-					{console.log('Map container - dupa')}
 				</section>
 			</main>
 		  </div>

@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import escapeRegExp from 'escape-string-regexp'
-import sortBy from 'sort-by'
 
 class LeftSideBar extends Component {
 	static propTypes = {
@@ -29,40 +27,12 @@ class LeftSideBar extends Component {
 		this.props.handleMarkersLocations(this.props.markersLocations, id)
 	}
 
-	componentWillMount = () => {
-		console.log('LeftSideBar component WILL mount');
-	}
-	
-	componentDidMount = () => {
-		console.log('LeftSideBar component DID mount');
-	}
-	
-	componentWillUnmount = () => {
-		console.log('LeftSideBar component WILL UNMOUNT');
-	}
-	
-	shouldComponentUpdate = () => {
-		console.log('LeftSideBar component SHOULD UPDATE');
-		return true;
-	}
-	
-	componentDidUpdate = () => {
-		console.log('LeftSideBar component DID UPDATE');
-	}
-	
-	
 	render = () => {
-	  console.log('Sunt in LeftSideBar.js RENDER');
-	  
 	  const { markersLocations, locationsToBeListed } = this.props;
 	  const { query } = this.state;
 	  
 	  // If locations are not filtered by user input, then list the initial locations
-	  // let actualLocations = locationsToBeListed.length === 0 || locationsToBeListed[0] === 'noMatch' ? markersLocations : locationsToBeListed;
 	  let actualLocations = locationsToBeListed.length === 0 ? markersLocations : locationsToBeListed;
-	  
-	  console.log('LOcatiile de listat in bara stanga')
-	  console.log(actualLocations)
 
 	  return (
 		<section id='left-side-bar' role='navigation'>
