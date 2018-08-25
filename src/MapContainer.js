@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { getFoursqPlaceId, getVenueDetails } from './InfoWindow.js';
+import { getFoursqPlaceId, getVenueDetails, showPlaceDetails } from './InfoWindow.js';
 import pinkFlag2 from './icons/pinkFlag2.png'
 import greenFlag2 from './icons/greenFlag2.png'
 
@@ -12,8 +12,8 @@ class MapContainer extends Component {
 	}
 						
 	state = {
-        map: {},	  	// object
-        markers: [],  	// store the created markers
+        map: {},
+        markers: [],
 		openWindow: false, // Show if the infoWindow is opened or not on a marker
 		prevIdOpened: '' // Keep the id of the marker we opened the infowindow manually
     }
@@ -30,16 +30,14 @@ class MapContainer extends Component {
 		})
 	}
 	
-	componentDidUpdate(prevProps, prevState) {
-	  // only update if the data has changed
-	  if (prevState.prevIdOpened !== this.state.prevIdOpened) {
-		console.log('Previous ID opened: ' + prevState.prevIdOpened);
-		console.log('Actual ID opened' + this.state.prevIdOpened);
-	  }
+	componentDidUpdate(prevProps, prevState) {  
+	  	// Open infowindow when user clicks on left bar
+		this.openInfowindowFromLeftBar();
 	}
 
-	// Insert Google Map API script
+
 	componentDidMount = () => {
+		// Insert Google Map API script
 		const script = document.createElement('script');
 		
 		script.src = 		'https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyDV-dtGMk8LBbgrxByBIlwmjgWOvzJ6rYM&v=3&callback=initMap';
@@ -77,16 +75,13 @@ class MapContainer extends Component {
 			scaledSize: new window.google.maps.Size(80, 80)
 		}
 		
-		// Instantiate infoWindow - Constanta asta este un obiect
+		// Instantiate infoWindow
 		const markerInfowindow = new window.google.maps.InfoWindow({
-			maxWidth: 300
+			maxWidth: 150
 		});
 		
 		// Instantiate bounds for our markers
 		const bounds = new window.google.maps.LatLngBounds();
-		
-		// Store temporary all created infoWindows
-		let infoWindows = [];
 
 		// Create all the initial markers
 		let markers = this.props.markersLocations
@@ -118,9 +113,7 @@ class MapContainer extends Component {
 					openWindow: false
 				})
 			});
-		
-			infoWindows.push(markerInfowindow);
-			
+
 			bounds.extend(marker.position);
 		  
 			return marker;
@@ -160,32 +153,25 @@ class MapContainer extends Component {
 			// Get place ID from Foursquare using lat&long
 			const placeLatLong=marker.position.lat()+','+marker.position.lng();
 
-			
+			/*
 			getFoursqPlaceId(placeLatLong)
 			.then(data => data.response.venues[0].id)
 			.then(id => {
 				getVenueDetails(id)
 					.then(r => r.json())
 					.then(data => {
-
-						console.log(data.response.venue);
 						// Response from Foursquare is OK
 						if (data.meta.code === 200) {
 							markerInfowindow.setContent(
-							`<div>
-								${title}
-								<hr>
-								Success!
+							`<div class="infowindow">
 								${this.showPlaceDetails(data.response.venue)}
-								
 							</div>`);
-// https://developers.google.com/maps/documentation/javascript/infowindows 
 						} else {
 							markerInfowindow.setContent(
 							`<div>
 								${title}
 								<hr>
-								<div className='error-display'>Sorry, but details for this place could not be loaded!</div>
+								<div class='error-display'>Sorry, but details for this place could not be loaded!</div>
 							</div>`);
 						}
 					})
@@ -197,15 +183,15 @@ class MapContainer extends Component {
 					<hr>
 					<div class='error-display'>Sorry, but there was an error while loading place details!</div>
 				</div>`);
-			}) 
+			}) */
 
 			// DE STERS SI DE ACTIVAT CE E MAI SUS
-			/*markerInfowindow.setContent(
+			markerInfowindow.setContent(
 				`<div>
 					${title}
 					<hr>
 					<div class='error-display'>BRAVOSS! HAI CA POTI CRISTINA</div>
-				</div>`)*/
+				</div>`)
 				
 			markerInfowindow.open(this.state.map, marker);
 
@@ -219,26 +205,11 @@ class MapContainer extends Component {
 		}
 	}
 	
-	showPlaceDetails = (venue) => {
-		
-		let descr = '';
-		descr += `<div> 
-						Category: ${venue.categories[0].shortName}
-					</div>`
-		return descr;
-	}
-	
-
-	render = () => {
+	// Open infowindow when user clicks on left bar
+	openInfowindowFromLeftBar = () => {
 		const { markers, prevIdOpened } = this.state;
 		const { markersLocations } = this.props;
-		
-		console.log('Sunt in MapContainer.js RENDER');
-		
-					/* - - - - - - - */
-		/* Open infowindow when user click on left bar */
-
-		// Find the location that we should open the infowindow (true)
+		// Find the location that we should open the infowindow (infowidnow is true)
 		let theLocation = markersLocations.filter(loc => loc.infowindow)[0];
 		
 		// Only if this location has at least 1 element, we can open the infowindow
@@ -256,39 +227,27 @@ class MapContainer extends Component {
 				}
 			}
 		}
+	}
+	
+	render = () => {
+		const { markers } = this.state;
 		
-					/* - - - - - - - */
 		/* Hide markers that should not appera on the map */
 		const { locationsToBeListed } = this.props;
 		
 		// First hide all markers and find the markers that should appear on the map
-		console.log('Markerii nostrii')
-		console.log(markers)
 		let markersToBeShown = markers.filter(mk => {
             mk.setMap(null);
             return locationsToBeListed.some(loc => loc.id === mk.id)
         })
 		
-		console.log('Locations to be listes')
-		console.log(locationsToBeListed)
-		console.log('Markers to be shown')
-		console.log(markersToBeShown)
-		
-		console.log(typeof locationsToBeListed[0])
 		// If noMatch
 		if (locationsToBeListed[0] === "noMatch") {
-			console.log('Avem noMatch')
 			markersToBeShown = []
 		} else if (markersToBeShown.length === 0 ) {
 			// If user did not input anything, show all the markers
 			markersToBeShown = markers
 		}
-		
-		console.log('Markers to be shown')
-		console.log(markersToBeShown)
-		
-		console.log('Harta noastra in starea ei')
-		console.log(this.state.map)
 		
 		// If the map is initialized (state object not empty), show the markers on the map 
 		if (!(Object.keys(this.state.map).length === 0 && this.state.map.constructor === Object)) {
