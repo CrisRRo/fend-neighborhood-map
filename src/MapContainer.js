@@ -153,7 +153,6 @@ class MapContainer extends Component {
 			// Get place ID from Foursquare using lat&long
 			const placeLatLong=marker.position.lat()+','+marker.position.lng();
 
-			/*
 			getFoursqPlaceId(placeLatLong)
 			.then(data => data.response.venues[0].id)
 			.then(id => {
@@ -164,7 +163,7 @@ class MapContainer extends Component {
 						if (data.meta.code === 200) {
 							markerInfowindow.setContent(
 							`<div class="infowindow">
-								${this.showPlaceDetails(data.response.venue)}
+								${showPlaceDetails(data.response.venue)}
 							</div>`);
 						} else {
 							markerInfowindow.setContent(
@@ -183,16 +182,8 @@ class MapContainer extends Component {
 					<hr>
 					<div class='error-display'>Sorry, but there was an error while loading place details!</div>
 				</div>`);
-			}) */
-
-			// DE STERS SI DE ACTIVAT CE E MAI SUS
-			markerInfowindow.setContent(
-				`<div>
-					${title}
-					<hr>
-					<div class='error-display'>BRAVOSS! HAI CA POTI CRISTINA</div>
-				</div>`)
-				
+			})
+	
 			markerInfowindow.open(this.state.map, marker);
 
 			// The marker is clicked, so change the icon

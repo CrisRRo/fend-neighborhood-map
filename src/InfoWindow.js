@@ -1,6 +1,6 @@
 
-const CLIENT_ID ='ADPHXQOXKITAIA0ZJEY0H0GSXNKZRA4LK320EKNHKRXJFQYI'
-const CLIENT_SECRET = '4OVJSDHY3A0ZQ4JE3UWSYKVLNF3NSDOTVONUVX1SIIM1CN2K'
+const CLIENT_ID ='2CF1GJP2TNPKZFIDKQCF2ULQJO4VXNFWWGT2J0LZWYFKWODC'
+const CLIENT_SECRET = 'XJB21XNM3Y3O2EHV4YBWD1WG5400JZ1NAPWEMKFVS2EBG4UU'
 
 export const getFoursqPlaceId = (placeLatLong) => 
 	fetch('https://api.foursquare.com/v2/venues/search?client_id='+CLIENT_ID+'&client_secret='+CLIENT_SECRET+'&v=20180323&ll='+placeLatLong+'&limit=1')
@@ -25,7 +25,6 @@ export const showPlaceDetails = (venue) => {
 	let imageUrl;
 	if (venue.bestPhoto.prefix && venue.bestPhoto.suffix) {
 		imageUrl = venue.bestPhoto.prefix + '150x150' + venue.bestPhoto.suffix;
-		console.log(imageUrl);
 	} else if (venue.photos.groups[0].items[0].prefix &&  venue.photos.groups[0].items[0].suffix) {
 		imageUrl = venue.photos.groups[0].items[0].prefix + '150x150' +  venue.photos.groups[0].items[0].suffix;
 		console.log(imageUrl);
