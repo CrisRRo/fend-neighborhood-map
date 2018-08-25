@@ -174,6 +174,17 @@ class MapContainer extends Component {
 							`<div class="infowindow">
 								${showPlaceDetails(data.response.venue)}
 							</div>`);
+							
+							/* 
+							* Calculate the position of the infowindow so it can be completly seen 
+							* A lot of thanks for solution to
+							* https://stackoverflow.com/questions/35347715/positioning-infowindow-on-google-map
+							*/
+							const prevPosition = JSON.parse(JSON.stringify(markerInfowindow.getPosition()));
+							const boundaries = JSON.parse(JSON.stringify(this.state.map.getBounds()));
+							const newPosition = {lat: prevPosition.lat + Math.abs(boundaries.north - prevPosition.lat) / 2.75, lng: prevPosition.lng};
+							markerInfowindow.setPosition(newPosition);
+							
 						} else {
 							markerInfowindow.setContent(
 							`<div>
