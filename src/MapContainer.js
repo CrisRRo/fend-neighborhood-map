@@ -35,21 +35,30 @@ class MapContainer extends Component {
 		this.openInfowindowFromLeftBar();
 	}
 
-
 	componentDidMount = () => {
 		// Insert Google Map API script
 		const script = document.createElement('script');
 		
-		script.src = 		'https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyDV-dtGMk8LBbgrxByBIlwmjgWOvzJ6rYM&v=3&callback=initMap';
+		script.src = 		'https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyDV-dtGMk8LBbgrxByBIlwmjgWOvzJ6rYM&v=3&callback=initMap&onerror=googleError';
 		script.async = true;
 		script.defer = true;
 		
 		// Give it a unique id, append to the body. If called more than once, the id already exist so no need to load it again
 		script.id = 'mapId'
+	
+		// Handle errors on loading map
+		script.onerror = (event) => {
+				document.getElementById('map-container').innerHTML = `<div class="map-error">Sorry, but there was an error while loading the map!</div>`;
+		}
 		
 		document.getElementById('map-container').appendChild(script);
-		
+
 		window.initMap = this.initMap;
+		window.gm_authFailure = this.gm_authFailure;
+	}
+	
+	gm_authFailure = () => {
+			document.getElementById('map-container').innerHTML = `<div class="map-error">Sorry, but the map could not be loaded due to authentication issues!</div>`;
 	}
 	
 	initMap = () => {

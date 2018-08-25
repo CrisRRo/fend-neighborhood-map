@@ -26,13 +26,17 @@ You can also take a look to [initial README file](initialREADME.md).
 	
 ## How to Use
 
-To get started right away:
-
+Run in **Development mode** - to get started right away:
 * download the project
 * in command line run `npm install`
 * install the following dependencies:
 - PropTypes: `npm install --save prop-types`
 * start the app with `npm start`
+
+Run in **Production mode** - run in command line:
+* `npm install`
+* `npm run build`
+* `serve -s build`
 
 ## Dependencies
 

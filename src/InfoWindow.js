@@ -31,7 +31,7 @@ export const showPlaceDetails = (venue) => {
 	}
 	
 	descr +=  imageUrl ? 
-			`<img src="${imageUrl}" alt="Image of ${venue.name}" height="50px" width="auto">` : '';
+			`<img src="${imageUrl}" alt="${venue.name}" height="50px" width="auto">` : '';
 	
 	descr += `<div class="text-near-image">`
 	

@@ -42,7 +42,6 @@ class LeftSideBar extends Component {
 				className='search-places'
 				type='text'
 				placeholder='Search places'
-				aria-label='Search places'
 				value={query}
 				onChange={(event) => this.updateQuery(event.target.value)}
 			/>
