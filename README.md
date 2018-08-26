@@ -21,8 +21,6 @@ The user see some selected locations on the map. In order to find more informati
 In the left side, there is a search button. User can search through places titles. According to search results, user will see the following updates:
 	1. Updated list with the places in the left bar
 	2. The corresponding markers on the map. The other markers will not be seen anymore.
-
-You can also take a look to [initial README file](initialREADME.md).
 	
 ## How to Use
 
